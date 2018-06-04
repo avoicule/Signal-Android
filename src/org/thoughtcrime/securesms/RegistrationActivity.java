@@ -700,7 +700,9 @@ public class RegistrationActivity extends BaseActionBarActivity implements Verif
     Intent nextIntent = getIntent().getParcelableExtra("next_intent");
 
     if (nextIntent == null) {
-      nextIntent = new Intent(RegistrationActivity.this, ConversationListActivity.class);
+      //alin
+     // nextIntent = new Intent(RegistrationActivity.this, ConversationListActivity.class);
+      nextIntent = new Intent(RegistrationActivity.this, BankAccountListActivity.class);
     }
 
     startActivity(nextIntent);
@@ -947,7 +949,9 @@ public class RegistrationActivity extends BaseActionBarActivity implements Verif
     Intent nextIntent = getIntent().getParcelableExtra("next_intent");
 
     if (nextIntent == null) {
-      nextIntent = new Intent(RegistrationActivity.this, ConversationListActivity.class);
+      //alin
+      //nextIntent = new Intent(RegistrationActivity.this, ConversationListActivity.class);
+      nextIntent = new Intent(RegistrationActivity.this, BankAccountListActivity.class);
     }
 
     startActivity(nextIntent);

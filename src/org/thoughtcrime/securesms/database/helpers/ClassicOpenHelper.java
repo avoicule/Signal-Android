@@ -20,6 +20,7 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 import com.google.i18n.phonenumbers.ShortNumberInfo;
 
+import org.thoughtcrime.securesms.BankAccountListActivity;
 import org.thoughtcrime.securesms.DatabaseUpgradeActivity;
 import org.thoughtcrime.securesms.crypto.AttachmentSecret;
 import org.thoughtcrime.securesms.crypto.ClassicDecryptingPartInputStream;
@@ -28,6 +29,7 @@ import org.thoughtcrime.securesms.crypto.MasterSecret;
 import org.thoughtcrime.securesms.crypto.MasterSecretUtil;
 import org.thoughtcrime.securesms.database.Address;
 import org.thoughtcrime.securesms.database.AttachmentDatabase;
+import org.thoughtcrime.securesms.database.BankAccountsDatabase;
 import org.thoughtcrime.securesms.database.DraftDatabase;
 import org.thoughtcrime.securesms.database.GroupDatabase;
 import org.thoughtcrime.securesms.database.GroupReceiptDatabase;
@@ -112,7 +114,8 @@ public class ClassicOpenHelper extends SQLiteOpenHelper {
   private static final int GROUP_RECEIPT_TRACKING                          = 45;
   private static final int UNREAD_COUNT_VERSION                            = 46;
   private static final int MORE_RECIPIENT_FIELDS                           = 47;
-  private static final int DATABASE_VERSION                                = 47;
+  private static final int INTRODUCED_FINANCE                              = 47;
+  private static final int DATABASE_VERSION                                = 48;
 
   private static final String TAG = ClassicOpenHelper.class.getSimpleName();
 
@@ -135,6 +138,7 @@ public class ClassicOpenHelper extends SQLiteOpenHelper {
     db.execSQL(GroupDatabase.CREATE_TABLE);
     db.execSQL(RecipientDatabase.CREATE_TABLE);
     db.execSQL(GroupReceiptDatabase.CREATE_TABLE);
+    db.execSQL(BankAccountsDatabase.CREATE_TABLE);
 
     executeStatements(db, SmsDatabase.CREATE_INDEXS);
     executeStatements(db, MmsDatabase.CREATE_INDEXS);
@@ -143,6 +147,7 @@ public class ClassicOpenHelper extends SQLiteOpenHelper {
     executeStatements(db, DraftDatabase.CREATE_INDEXS);
     executeStatements(db, GroupDatabase.CREATE_INDEXS);
     executeStatements(db, GroupReceiptDatabase.CREATE_INDEXES);
+    executeStatements(db, BankAccountsDatabase.CREATE_INDEXES);
   }
 
   public void onApplicationLevelUpgrade(Context context, MasterSecret masterSecret, int fromVersion,
@@ -1295,6 +1300,10 @@ public class ClassicOpenHelper extends SQLiteOpenHelper {
           }
         }
       }
+    }
+
+    if (oldVersion < MORE_RECIPIENT_FIELDS) {
+      //alin
     }
 
     db.setTransactionSuccessful();

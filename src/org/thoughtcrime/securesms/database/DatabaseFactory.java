@@ -57,6 +57,7 @@ public class DatabaseFactory {
   private final SignedPreKeyDatabase  signedPreKeyDatabase;
   private final SessionDatabase       sessionDatabase;
   private final SearchDatabase        searchDatabase;
+  private final BankAccountsDatabase  bankAccountsDatabase;
 
   public static DatabaseFactory getInstance(Context context) {
     synchronized (lock) {
@@ -134,6 +135,9 @@ public class DatabaseFactory {
   public static SearchDatabase getSearchDatabase(Context context) {
     return getInstance(context).searchDatabase;
   }
+  public static BankAccountsDatabase getBankAccountsDatabase(Context context) {
+    return getInstance(context).bankAccountsDatabase;
+  }
 
   public static SQLiteDatabase getBackupDatabase(Context context) {
     return getInstance(context).databaseHelper.getReadableDatabase();
@@ -168,6 +172,7 @@ public class DatabaseFactory {
     this.signedPreKeyDatabase = new SignedPreKeyDatabase(context, databaseHelper);
     this.sessionDatabase      = new SessionDatabase(context, databaseHelper);
     this.searchDatabase       = new SearchDatabase(context, databaseHelper);
+    this.bankAccountsDatabase =new BankAccountsDatabase(context,databaseHelper);
   }
 
   public void onApplicationLevelUpgrade(@NonNull Context context, @NonNull MasterSecret masterSecret,

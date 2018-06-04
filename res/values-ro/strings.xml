@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <string name="app_name">Signal</string>
+  <string name="app_name">OraPay</string>
   <string name="yes">Da</string>
   <string name="no">Nu</string>
   <string name="delete">Șterge</string>
@@ -1241,5 +1241,6 @@ Am primit mesajul conform căruia schimbul de chei a avut loc pentru o versiune 
   <string name="prompt_passphrase_activity__tap_to_unlock">Apasă pentru deblocare</string>
   <string name="RegistrationLockDialog_reminder">Memento:</string>
   <string name="recipient_preferences__about">Despre</string>
-  <!--EOF-->
+    <string name="mnu_my_bank">Personal finance</string>
+    <!--EOF-->
 </resources>

@@ -3,6 +3,8 @@
 
     <item android:title="@string/text_secure_normal__menu_new_group"
           android:id="@+id/menu_new_group" />
+    <item android:title="@string/mnu_my_bank"
+        android:id="@+id/menu_my_bank" />
 
     <item android:title="@string/text_secure_normal__menu_clear_passphrase"
           android:id="@+id/menu_clear_passphrase" />

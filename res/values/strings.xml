@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Signal</string>
+    <string name="app_name">OraPay</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="delete">Delete</string>
@@ -1476,6 +1476,10 @@
     <string name="prompt_passphrase_activity__tap_to_unlock">TAP TO UNLOCK</string>
     <string name="RegistrationLockDialog_reminder">Reminder:</string>
     <string name="recipient_preferences__about">About</string>
+    <string name="mnu_my_bank">My Bank</string>
+    <string name="mnu_accounts">Accounts</string>
+    <string name="mnu_transactions">Transactions</string>
+    <string name="txt_transactions_no_transations">You have no transactions!</string>
     <!-- EOF -->
 
 </resources>

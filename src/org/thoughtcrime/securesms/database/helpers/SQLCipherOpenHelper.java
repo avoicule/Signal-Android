@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
+import android.support.design.internal.BottomNavigationItemView;
 import android.util.Log;
 
 import net.sqlcipher.database.SQLiteDatabase;
@@ -16,6 +17,7 @@ import org.thoughtcrime.securesms.ApplicationContext;
 import org.thoughtcrime.securesms.crypto.DatabaseSecret;
 import org.thoughtcrime.securesms.crypto.MasterSecret;
 import org.thoughtcrime.securesms.database.AttachmentDatabase;
+import org.thoughtcrime.securesms.database.BankAccountsDatabase;
 import org.thoughtcrime.securesms.database.DraftDatabase;
 import org.thoughtcrime.securesms.database.GroupDatabase;
 import org.thoughtcrime.securesms.database.GroupReceiptDatabase;
@@ -48,8 +50,9 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
   private static final int QUOTED_REPLIES                   = 7;
   private static final int SHARED_CONTACTS                  = 8;
   private static final int FULL_TEXT_SEARCH                 = 9;
+  private static final int INTRODUCED_FINANCE                = 10;
 
-  private static final int    DATABASE_VERSION = 9;
+  private static final int    DATABASE_VERSION = 10;
   private static final String DATABASE_NAME    = "signal.db";
 
   private final Context        context;
@@ -89,6 +92,7 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
     db.execSQL(OneTimePreKeyDatabase.CREATE_TABLE);
     db.execSQL(SignedPreKeyDatabase.CREATE_TABLE);
     db.execSQL(SessionDatabase.CREATE_TABLE);
+    db.execSQL(BankAccountsDatabase.CREATE_TABLE);
     for (String sql : SearchDatabase.CREATE_TABLE) {
       db.execSQL(sql);
     }
@@ -100,7 +104,7 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
     executeStatements(db, DraftDatabase.CREATE_INDEXS);
     executeStatements(db, GroupDatabase.CREATE_INDEXS);
     executeStatements(db, GroupReceiptDatabase.CREATE_INDEXES);
-
+    executeStatements(db, BankAccountsDatabase.CREATE_INDEXES);
     if (context.getDatabasePath(ClassicOpenHelper.NAME).exists()) {
       ClassicOpenHelper                      legacyHelper = new ClassicOpenHelper(context);
       android.database.sqlite.SQLiteDatabase legacyDb     = legacyHelper.getWritableDatabase();
@@ -217,6 +221,10 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
 
     if (oldVersion < MIGRATE_PREKEYS_VERSION) {
       PreKeyMigrationHelper.cleanUpPreKeys(context);
+    }
+
+    if (oldVersion < INTRODUCED_FINANCE) {
+      //alin
     }
   }
 

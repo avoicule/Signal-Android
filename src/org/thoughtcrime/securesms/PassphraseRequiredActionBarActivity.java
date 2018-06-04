@@ -196,7 +196,8 @@ public abstract class PassphraseRequiredActionBarActivity extends BaseActionBarA
   }
 
   private Intent getConversationListIntent() {
-    return new Intent(this, ConversationListActivity.class);
+  // return new Intent(this, ConversationListActivity.class);//alin
+     return new Intent(this, BankAccountListActivity.class);
   }
 
   private void initializeClearKeyReceiver() {
