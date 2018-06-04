@@ -5,7 +5,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
+import android.database.MergeCursor;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
@@ -26,8 +28,10 @@ import org.thoughtcrime.securesms.recipients.Recipient;
 import org.thoughtcrime.securesms.sms.IncomingGroupMessage;
 import org.thoughtcrime.securesms.sms.IncomingTextMessage;
 import org.thoughtcrime.securesms.sms.OutgoingTextMessage;
+import org.thoughtcrime.securesms.util.DelimiterUtil;
 import org.thoughtcrime.securesms.util.JsonUtils;
 import org.thoughtcrime.securesms.util.TextSecurePreferences;
+import org.thoughtcrime.securesms.util.Util;
 import org.whispersystems.jobqueue.JobManager;
 import org.whispersystems.libsignal.util.guava.Optional;
 
@@ -132,6 +136,17 @@ public class BankAccountsDatabase extends Database {
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
         db.delete(TABLE_NAME, null, null);
     }
+
+    public Cursor getBankAccountsList() {
+        SQLiteDatabase db     = databaseHelper.getReadableDatabase();
+
+        Cursor         cursor = db.rawQuery("select " +BANK_NAME +" from " +TABLE_NAME, null);
+
+        setNotifyConverationListListeners(cursor);
+
+        return cursor;
+    }
+
 
     public static class BancAccountInfo {
         private final String bankName;
