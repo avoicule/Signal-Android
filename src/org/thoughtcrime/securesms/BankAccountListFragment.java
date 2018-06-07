@@ -44,7 +44,7 @@ import android.widget.Toast;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.thoughtcrime.securesms.ConversationListAdapter.ItemClickListener;
+import org.thoughtcrime.securesms.BankAccountListAdapter.ItemClickListener;
 import org.thoughtcrime.securesms.components.recyclerview.DeleteItemAnimator;
 import org.thoughtcrime.securesms.components.registration.PulsingFloatingActionButton;
 import org.thoughtcrime.securesms.components.reminder.DefaultSmsReminder;
@@ -61,6 +61,7 @@ import org.thoughtcrime.securesms.crypto.MasterSecret;
 import org.thoughtcrime.securesms.database.BankAccountsDatabase;
 import org.thoughtcrime.securesms.database.DatabaseFactory;
 import org.thoughtcrime.securesms.database.MessagingDatabase.MarkedMessageInfo;
+import org.thoughtcrime.securesms.database.loaders.BankAccountListLoader;
 import org.thoughtcrime.securesms.database.loaders.ConversationListLoader;
 import org.thoughtcrime.securesms.events.ReminderUpdateEvent;
 import org.thoughtcrime.securesms.mms.GlideApp;
@@ -78,8 +79,7 @@ import java.util.Locale;
 import java.util.Set;
 
 
-public class BankAccountListFragment extends Fragment
-        implements LoaderManager.LoaderCallbacks<Cursor>, ActionMode.Callback, ItemClickListener
+public class BankAccountListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, ActionMode.Callback, ItemClickListener
 {
     public static final String ARCHIVE = "archive";
 
@@ -152,19 +152,20 @@ public class BankAccountListFragment extends Fragment
 
 
         list.getAdapter().notifyDataSetChanged();
-        EventBus.getDefault().register(this);
+     // EventBus.getDefault().register(this); //alin
     }
+
 
     @Override
     public void onPause() {
         super.onPause();
 
         fab.stopPulse();
-        EventBus.getDefault().unregister(this);
+     //   EventBus.getDefault().unregister(this); //alin
     }
 
-    public ConversationListAdapter getListAdapter() {
-        return (ConversationListAdapter) list.getAdapter();
+    public BankAccountListAdapter getListAdapter() {
+        return (BankAccountListAdapter) list.getAdapter();
     }
 
     public void setQueryFilter(String query) {
@@ -179,7 +180,7 @@ public class BankAccountListFragment extends Fragment
     }
 
    private void initializeListAdapter() {
-        list.setAdapter(new ConversationListAdapter(getActivity(), GlideApp.with(this), locale, null, this));
+        list.setAdapter(new BankAccountListAdapter(getActivity(), GlideApp.with(this), locale, null, this));
         getLoaderManager().restartLoader(0, null, this);
     }
 
@@ -291,7 +292,7 @@ public class BankAccountListFragment extends Fragment
 
     @Override
     public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
-        return new ConversationListLoader(getActivity(), queryFilter, archive);
+        return new BankAccountListLoader(getActivity(), queryFilter);
     }
 
     @Override

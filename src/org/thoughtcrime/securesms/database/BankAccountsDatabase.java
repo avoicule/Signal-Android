@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.MergeCursor;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -23,6 +24,7 @@ import org.thoughtcrime.securesms.database.documents.IdentityKeyMismatchList;
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper;
 import org.thoughtcrime.securesms.database.model.MessageRecord;
 import org.thoughtcrime.securesms.database.model.SmsMessageRecord;
+import org.thoughtcrime.securesms.database.model.ThreadRecord;
 import org.thoughtcrime.securesms.jobs.TrimThreadJob;
 import org.thoughtcrime.securesms.recipients.Recipient;
 import org.thoughtcrime.securesms.sms.IncomingGroupMessage;
@@ -35,6 +37,7 @@ import org.thoughtcrime.securesms.util.Util;
 import org.whispersystems.jobqueue.JobManager;
 import org.whispersystems.libsignal.util.guava.Optional;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -147,8 +150,13 @@ public class BankAccountsDatabase extends Database {
         return cursor;
     }
 
+    public BankAccountsReader readerFor(Cursor cursor) {
+        return new BankAccountsReader(cursor);
+    }
+
 
     public static class BancAccountInfo {
+        private final int id=-1;
         private final String bankName;
         private final int     status;
         private final long    timestamp;
@@ -167,6 +175,21 @@ public class BankAccountsDatabase extends Database {
             this.lastLogin=lastLogin;
         }
 
+        public int getPrimary() {
+            return primary;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public String getRefreshToken() {
+            return refreshToken;
+        }
+
+        public long getLastLogin() {
+            return lastLogin;
+        }
 
         public String getBankName() {
             return bankName;
@@ -181,7 +204,45 @@ public class BankAccountsDatabase extends Database {
             return timestamp;
         }
     }
-}
+
+    public class BankAccountsReader implements Closeable {
+
+        private final Cursor cursor;
+
+        public BankAccountsReader(Cursor cursor) {
+            this.cursor = cursor;
+        }
+
+        public BancAccountInfo getNext() {
+            if (cursor == null || !cursor.moveToNext())
+                return null;
+
+            return getCurrent();
+        }
+
+        public BancAccountInfo getCurrent() {
+          //  long   id            = cursor.getLong(cursor.getColumnIndexOrThrow(BankAccountsDatabase.ID));
+            String bankName      = cursor.getString(cursor.getColumnIndexOrThrow(BankAccountsDatabase.BANK_NAME));
+            int    status        = cursor.getInt(cursor.getColumnIndexOrThrow(BankAccountsDatabase.STATUS));
+          //  long   timestamp     = cursor.getLong(cursor.getColumnIndexOrThrow(BankAccountsDatabase.TIMESTAMP));
+            String accountNumber = cursor.getString(cursor.getColumnIndexOrThrow(BankAccountsDatabase.BANK_ACCOUNT));
+            //long   lastLogin     = cursor.getLong(cursor.getColumnIndexOrThrow(BankAccountsDatabase.LAST_LOGIN));
+            //String refreshToken  = cursor.getString(cursor.getColumnIndexOrThrow(BankAccountsDatabase.REFRESH_TOKEN));
+            //int    primaryAccount= cursor.getInt(cursor.getColumnIndexOrThrow(BankAccountsDatabase.PRIMARY));
+
+           // return new BancAccountInfo(bankName, status, timestamp, accountNumber, lastLogin, refreshToken,primaryAccount);
+            return new BancAccountInfo(bankName, status, 0, accountNumber, 0, null,0);
+        }
+
+        @Override
+        public void close() {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
+    }
 
 
 
